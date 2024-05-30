@@ -1,3 +1,3 @@
-# collective-of-meaninglessness[https://a-swoo18.github.io/collective-of-meaninglessness/]
+# [Collective of Meaninglessness](https://a-swoo18.github.io/collective-of-meaninglessness/)
 
-the collective of meaninglessness... but is it?
+The collective of meaninglessness... but is it?
