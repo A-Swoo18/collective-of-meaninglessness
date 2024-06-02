@@ -28,7 +28,7 @@ h1 {
 #treeCanvas {
     border: 1px solid #ccc;
     background-color: white;
-    /* cursor: url('images/scissors.png'), auto;  */
+    cursor: url('images/scissors.png'), auto; 
     /* Use a custom cursor image */
 }
 
