@@ -22,7 +22,7 @@ class Branch {
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.endX, this.endY);
-        ctx.strokeStyle = 'brown';
+        ctx.strokeStyle = 'brown'; // Ensure the color is correct
         ctx.lineWidth = this.lineWidth;
         ctx.stroke();
     }
@@ -71,17 +71,30 @@ function cutTree(x, y) {
 }
 
 function removeBranchAndChildren(branch) {
-    // Recursively remove all children branches
-    for (let i = branches.length - 1; i >= 0; i--) {
-        if (branches[i].parent === branch) {
-            removeBranchAndChildren(branches[i]);
+    // Find all descendants of the branch
+    const descendants = branches.filter(b => isDescendant(b, branch));
+    // Remove all descendants
+    descendants.forEach(descendant => {
+        const index = branches.indexOf(descendant);
+        if (index !== -1) {
+            branches.splice(index, 1);
         }
-    }
+    });
     // Remove the branch itself
     const index = branches.indexOf(branch);
     if (index !== -1) {
         branches.splice(index, 1);
     }
+}
+
+function isDescendant(branch, parentBranch) {
+    while (branch.parent) {
+        if (branch.parent === parentBranch) {
+            return true;
+        }
+        branch = branch.parent;
+    }
+    return false;
 }
 
 function initTree() {
