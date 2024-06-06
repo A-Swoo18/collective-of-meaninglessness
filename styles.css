@@ -1,17 +1,23 @@
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
     margin: 0;
+    padding: 0;
     background-color: #f0f0f0;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: #f0f0f0;
 }
 
 .container {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .activity {
@@ -37,9 +43,19 @@ body {
 }
 
 h1 {
+    text-align: center;
     margin: 20px 0;
 }
 
-canvas {
-    border: 1px solid #ccc;
+.switch-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px);
+}
+
+.switch-container img {
+    cursor: pointer;
+    width: 100px;
+    height: auto;
 }
