@@ -12,17 +12,17 @@ class Branch {
         this.length = length;
         this.angle = angle;
         this.depth = depth;
-        this.parent = parent; // Add parent to track parent branch
+        this.parent = parent; 
         this.endX = x + length * Math.cos(angle);
         this.endY = y + length * Math.sin(angle);
-        this.lineWidth = Math.max(1, 10 - depth); // Line width decreases with depth
+        this.lineWidth = Math.max(1, 10 - depth); 
     }
 
     draw() {
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.endX, this.endY);
-        ctx.strokeStyle = 'brown'; // Ensure the color is correct
+        ctx.strokeStyle = 'brown'; 
         ctx.lineWidth = this.lineWidth;
         ctx.stroke();
     }
@@ -120,7 +120,6 @@ canvas.addEventListener('mousemove', (e) => {
 });
 
 function getRandomColor() {
-  // Generates a random hex color
   const letters = '0123456789ABCDEF';
   let color = '#';
   for (let i = 0; i < 6; i++) {
@@ -129,7 +128,7 @@ function getRandomColor() {
   return color;
 }
 
-function drawTree(ctx, startX, startY, length, angle, branchWidth) {
+function drawTree(ctx, startX, startY, length, angle, branchWidth, color) {
   ctx.save();
   ctx.beginPath();
   ctx.translate(startX, startY);
@@ -137,8 +136,7 @@ function drawTree(ctx, startX, startY, length, angle, branchWidth) {
   ctx.moveTo(0, 0);
   ctx.lineTo(0, -length);
 
-  // Use random color for each tree
-  ctx.strokeStyle = getRandomColor();
+  ctx.strokeStyle = color;
   ctx.lineWidth = branchWidth;
   ctx.stroke();
 
@@ -147,10 +145,20 @@ function drawTree(ctx, startX, startY, length, angle, branchWidth) {
     return;
   }
 
-  drawTree(ctx, 0, -length, length * 0.7, angle - 15, branchWidth * 0.7);
-  drawTree(ctx, 0, -length, length * 0.7, angle + 15, branchWidth * 0.7);
+  drawTree(ctx, 0, -length, length * 0.7, angle - 15, branchWidth * 0.7, color);
+  drawTree(ctx, 0, -length, length * 0.7, angle + 15, branchWidth * 0.7, color);
 
   ctx.restore();
 }
+
+// Draw the tree when the page loads
+window.onload = function() {
+  const canvas = document.getElementById('treeCanvas');
+  if (canvas && canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    const color = getRandomColor();
+    drawTree(ctx, canvas.width / 2, canvas.height - 20, 80, 0, 12, color);
+  }
+};
 
 initTree();
