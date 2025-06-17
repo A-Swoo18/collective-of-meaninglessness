@@ -119,4 +119,38 @@ canvas.addEventListener('mousemove', (e) => {
     isCutting = false;
 });
 
+function getRandomColor() {
+  // Generates a random hex color
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function drawTree(ctx, startX, startY, length, angle, branchWidth) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.translate(startX, startY);
+  ctx.rotate(angle * Math.PI/180);
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, -length);
+
+  // Use random color for each tree
+  ctx.strokeStyle = getRandomColor();
+  ctx.lineWidth = branchWidth;
+  ctx.stroke();
+
+  if (length < 10) {
+    ctx.restore();
+    return;
+  }
+
+  drawTree(ctx, 0, -length, length * 0.7, angle - 15, branchWidth * 0.7);
+  drawTree(ctx, 0, -length, length * 0.7, angle + 15, branchWidth * 0.7);
+
+  ctx.restore();
+}
+
 initTree();
