@@ -128,7 +128,7 @@ function getRandomColor() {
   return color;
 }
 
-function drawTree(ctx, startX, startY, length, angle, branchWidth, color) {
+function drawTree(ctx, startX, startY, length, angle, branchWidth, color, depth) {
   ctx.save();
   ctx.beginPath();
   ctx.translate(startX, startY);
@@ -139,34 +139,54 @@ function drawTree(ctx, startX, startY, length, angle, branchWidth, color) {
   ctx.lineWidth = branchWidth;
   ctx.stroke();
 
-  if (length < 10) {
+  if (length < 10 || depth > 12) {
     ctx.restore();
     return;
   }
 
-  // Randomize branch properties
-  const numBranches = Math.floor(Math.random() * 2) + 2; // 2 or 3 branches
+  // Randomize number of branches (2-4)
+  const numBranches = 2 + Math.floor(Math.random() * 3);
+
   for (let i = 0; i < numBranches; i++) {
-    const newAngle = angle + (Math.random() * 40 - 20); // -20 to +20 degrees
-    const newLength = length * (0.6 + Math.random() * 0.2); // 60% to 80% of current length
-    const newWidth = branchWidth * (0.7 + Math.random() * 0.2); // 70% to 90% of current width
-    drawTree(ctx, 0, -length, newLength, newAngle, newWidth, color);
+    // Random angle between -40 and 40 degrees, spread out
+    const branchAngle = -30 + (60 / (numBranches - 1)) * i + (Math.random() * 20 - 10);
+    // Random length reduction (65% to 80%)
+    const newLength = length * (0.65 + Math.random() * 0.15);
+    // Random width reduction (65% to 80%)
+    const newWidth = branchWidth * (0.65 + Math.random() * 0.15);
+    drawTree(ctx, 0, -length, newLength, branchAngle, newWidth, color, depth + 1);
   }
 
   ctx.restore();
 }
 
-window.onload = function() {
+function resizeCanvasAndDraw() {
   const canvas = document.getElementById('treeCanvas');
-  if (canvas && canvas.getContext) {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const color = getRandomColor();
-    // Randomize initial trunk length and width
-    const trunkLength = 80 + Math.random() * 40; // 80 to 120
-    const trunkWidth = 10 + Math.random() * 6;   // 10 to 16
-    drawTree(ctx, canvas.width / 2, canvas.height - 20, trunkLength, 0, trunkWidth, color);
-  }
-};
+  if (!canvas) return;
+  // Make canvas fill the window
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Randomize trunk color, length, and width
+  const color = getRandomColor();
+  const trunkLength = canvas.height * (0.28 + Math.random() * 0.12); // 28% to 40% of height
+  const trunkWidth = canvas.width * (0.012 + Math.random() * 0.008); // 1.2% to 2% of width
+
+  drawTree(
+    ctx,
+    canvas.width / 2,
+    canvas.height - 30,
+    trunkLength,
+    0,
+    trunkWidth,
+    color,
+    0
+  );
+}
+
+window.onload = resizeCanvasAndDraw;
+window.onresize = resizeCanvasAndDraw;
 
 initTree();
