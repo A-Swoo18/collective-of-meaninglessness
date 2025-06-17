@@ -132,10 +132,9 @@ function drawTree(ctx, startX, startY, length, angle, branchWidth, color) {
   ctx.save();
   ctx.beginPath();
   ctx.translate(startX, startY);
-  ctx.rotate(angle * Math.PI/180);
+  ctx.rotate(angle * Math.PI / 180);
   ctx.moveTo(0, 0);
   ctx.lineTo(0, -length);
-
   ctx.strokeStyle = color;
   ctx.lineWidth = branchWidth;
   ctx.stroke();
@@ -145,19 +144,28 @@ function drawTree(ctx, startX, startY, length, angle, branchWidth, color) {
     return;
   }
 
-  drawTree(ctx, 0, -length, length * 0.7, angle - 15, branchWidth * 0.7, color);
-  drawTree(ctx, 0, -length, length * 0.7, angle + 15, branchWidth * 0.7, color);
+  // Randomize branch properties
+  const numBranches = Math.floor(Math.random() * 2) + 2; // 2 or 3 branches
+  for (let i = 0; i < numBranches; i++) {
+    const newAngle = angle + (Math.random() * 40 - 20); // -20 to +20 degrees
+    const newLength = length * (0.6 + Math.random() * 0.2); // 60% to 80% of current length
+    const newWidth = branchWidth * (0.7 + Math.random() * 0.2); // 70% to 90% of current width
+    drawTree(ctx, 0, -length, newLength, newAngle, newWidth, color);
+  }
 
   ctx.restore();
 }
 
-// Draw the tree when the page loads
 window.onload = function() {
   const canvas = document.getElementById('treeCanvas');
   if (canvas && canvas.getContext) {
     const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const color = getRandomColor();
-    drawTree(ctx, canvas.width / 2, canvas.height - 20, 80, 0, 12, color);
+    // Randomize initial trunk length and width
+    const trunkLength = 80 + Math.random() * 40; // 80 to 120
+    const trunkWidth = 10 + Math.random() * 6;   // 10 to 16
+    drawTree(ctx, canvas.width / 2, canvas.height - 20, trunkLength, 0, trunkWidth, color);
   }
 };
 
