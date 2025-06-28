@@ -82,8 +82,12 @@ document.getElementById('generateBtn').onclick = function() {
   document.getElementById('drawContainer').style.display = 'none';
   document.getElementById('fibCanvas').style.display = 'block';
 
-  // Use the number of unique drawn pixels to determine sequence length (min 4, max 8 for clarity)
-  const n = Math.max(4, Math.min(8, drawnPixels.size));
+  // Get user-selected number of layers
+  const layerInput = document.getElementById('layerCount');
+  let n = parseInt(layerInput.value, 10);
+  if (isNaN(n)) n = 6;
+  n = Math.max(4, Math.min(12, n));
+
   const fibSeq = generateFibonacci(n);
 
   // Copy user's drawing to an offscreen canvas
@@ -92,10 +96,50 @@ document.getElementById('generateBtn').onclick = function() {
   userDrawing.height = drawCanvas.height;
   userDrawing.getContext('2d').drawImage(drawCanvas, 0, 0);
 
-  // Draw the Fibonacci spiral using the user's drawing as a stamp
-  drawFibonacciDrawingSpiral(fibSeq, userDrawing);
+  // Animate drawing the Fibonacci spiral one layer at a time
+  const fibCanvas = document.getElementById('fibCanvas');
+  const fibCtx = fibCanvas.getContext('2d');
+  fibCtx.clearRect(0, 0, fibCanvas.width, fibCanvas.height);
 
-  // Show a message
-//   document.getElementById('fibResult').textContent =
-    // `Fibonacci sequence image with ${n} steps generated from your drawing!`;
+  let cx = fibCanvas.width / 2;
+  let cy = fibCanvas.height / 2;
+  let angle = 0;
+  let x = cx;
+  let y = cy;
+
+  let i = 0;
+
+  function drawNextLayer() {
+    if (i >= fibSeq.length) {
+      document.getElementById('fibResult').textContent =
+        `Fibonacci sequence image with ${n} layers generated from your drawing!`;
+      return;
+    }
+
+    // Scale factor for the drawing
+    const scale = fibSeq[i] / fibSeq[fibSeq.length - 1] * 1.2;
+
+    fibCtx.save();
+    fibCtx.translate(x, y);
+    fibCtx.rotate(angle);
+    fibCtx.globalAlpha = 0.8 - i * 0.06;
+    fibCtx.drawImage(
+      userDrawing,
+      -userDrawing.width * scale / 2,
+      -userDrawing.height * scale / 2,
+      userDrawing.width * scale,
+      userDrawing.height * scale
+    );
+    fibCtx.restore();
+
+    // Move to next position in spiral
+    angle += Math.PI / 2;
+    x += Math.cos(angle) * fibSeq[i];
+    y += Math.sin(angle) * fibSeq[i];
+
+    i++;
+    setTimeout(drawNextLayer, 500);
+  }
+
+  drawNextLayer();
 };

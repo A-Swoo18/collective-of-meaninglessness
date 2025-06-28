@@ -128,7 +128,7 @@ function getRandomColor() {
   return color;
 }
 
-function drawTree(ctx, startX, startY, length, angle, branchWidth, color, depth) {
+function drawTree(ctx, startX, startY, length, angle, branchWidth, color, depth, maxDepth) {
   ctx.save();
   ctx.beginPath();
   ctx.translate(startX, startY);
@@ -139,22 +139,18 @@ function drawTree(ctx, startX, startY, length, angle, branchWidth, color, depth)
   ctx.lineWidth = branchWidth;
   ctx.stroke();
 
-  if (length < 10 || depth > 12) {
+  if (length < 10 || depth > maxDepth) {
     ctx.restore();
     return;
   }
 
-  // Randomize number of branches (2-4)
   const numBranches = 2 + Math.floor(Math.random() * 3);
 
   for (let i = 0; i < numBranches; i++) {
-    // Random angle between -40 and 40 degrees, spread out
-    const branchAngle = -30 + (60 / (numBranches - 1)) * i + (Math.random() * 20 - 10);
-    // Random length reduction (65% to 80%)
-    const newLength = length * (0.65 + Math.random() * 0.15);
-    // Random width reduction (65% to 80%)
+    const branchAngle = -20 + (40 / (numBranches - 1)) * i + (Math.random() * 12 - 6);
+    const newLength = length * (0.65 + Math.random() * 0.13);
     const newWidth = branchWidth * (0.65 + Math.random() * 0.15);
-    drawTree(ctx, 0, -length, newLength, branchAngle, newWidth, color, depth + 1);
+    drawTree(ctx, 0, -length, newLength, branchAngle, newWidth, color, depth + 1, maxDepth);
   }
 
   ctx.restore();
@@ -169,10 +165,11 @@ function resizeCanvasAndDraw() {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Randomize trunk color, length, and width
+  // Trunk size is always a percentage of the canvas size
   const color = getRandomColor();
-  const trunkLength = canvas.height * (0.28 + Math.random() * 0.12); // 28% to 40% of height
-  const trunkWidth = canvas.width * (0.012 + Math.random() * 0.008); // 1.2% to 2% of width
+  const trunkLength = Math.min(canvas.height, canvas.width) * 0.22; // 22% of smaller dimension
+  const trunkWidth = Math.max(8, Math.min(canvas.width, canvas.height) * 0.012); // 1.2% of smaller dimension, min 8px
+  const maxDepth = 9 + Math.floor(Math.random() * 3); // 9 to 11
 
   drawTree(
     ctx,
@@ -182,7 +179,8 @@ function resizeCanvasAndDraw() {
     0,
     trunkWidth,
     color,
-    0
+    0,
+    maxDepth
   );
 }
 
