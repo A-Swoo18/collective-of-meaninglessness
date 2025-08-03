@@ -1,1 +1,57 @@
-<!-- langton's ant  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinning Wheel</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 32px;
+            margin-bottom: 24px;
+        }
+        #wheelContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+        }
+        #wheelCanvas {
+            display: block;
+            margin: 32px auto 16px auto;
+            background: #fff;
+            border: 2px solid #333;
+        }
+        #namesInput {
+            width: 300px;
+            margin-bottom: 12px;
+        }
+        #addNameBtn, #spinBtn {
+            margin: 0 8px 12px 0;
+        }
+        #namesList, #winner {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+  <h1>Spinning Wheel</h1>
+  <div id="wheelContainer">
+    <input type="text" id="namesInput" placeholder="Enter name" />
+    <button id="addNameBtn">Add Name</button>
+    <button id="spinBtn">Spin!</button>
+    <div id="namesList"></div>
+    <canvas id="wheelCanvas" width="400" height="400"></canvas>
+    <div id="winner"></div>
+  </div>
+  <script src="spinningWheel.js"></script>
+</body>
+</html>
